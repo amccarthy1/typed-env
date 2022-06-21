@@ -7,7 +7,6 @@
   "umd:main": "dist/umd/src/index.js",
   "types": "dist/types/src/index.d.ts",
   "scripts": {
-    "postinstall": "husky install",
     "prepublishOnly": "pinst --disable",
     "postpublish": "pinst --enable",
     "lint": "eslint .",
@@ -53,7 +52,6 @@
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "husky": "^7.0.2",
     "jest": "^27.2.0",
     "pinst": "^2.1.6",
     "prettier": "^2.4.0",
