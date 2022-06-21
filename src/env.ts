@@ -16,15 +16,39 @@ const parseValue = <T>(
   }
 }
 
+/**
+ * Construct a TypedEnv object given a schema and, optionally,
+ * a record of string values from which to read variables.
+ *
+ * @param schema An object representing variables to parse.
+ * By default, schema keys should match environment variable names,
+ * but you can override this by passing the optional `variable`
+ * property to a variable declaration.
+ * E.G. `numThreads: IntVar({variable: NUM_THREADS})`
+ *
+ * @param values Pass an object to use that instead of `process.env`.
+ * Useful for testing or cases where your application is configured
+ * using something other than environment variables.
+ *
+ * @returns A typed object matching the schema specified.
+ *
+ * @throws Any runtime errors associated with parsing the environment variable stack, such as:
+ * - A required variable was not defined.
+ * - A variable failed validation.
+ * - A variable did not parse.
+ * For security, the thrown error message will not include the value of the environment variable
+ * to prevent accidental logging of secrets. However, if you include a custom validator, any error
+ * messages _will_ be re-thrown.
+ */
 export function TypedEnv<T extends Record<string, unknown>>(
-  declarations: {
+  schema: {
     [E in keyof T]: Declaration<T[E]>
   },
   values?: Record<string, string>
 ): T {
   const env = values ?? process.env
   const result = Object.fromEntries(
-    Object.entries(declarations).map(
+    Object.entries(schema).map(
       ([key, declaration]: [string, Declaration<unknown>]) =>
         parseValue([key, declaration], env)
     )
