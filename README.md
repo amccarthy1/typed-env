@@ -12,15 +12,15 @@ This library aims to allow you to define environment variables in a more type-sa
 example:
 
 ```ts
-const environment = process.env.ENVIRONMENT;
+const environment = process.env.ENVIRONMENT
 
 const makePayment = (amount: bigint) => {
   if (environment === 'prod') {
-    makeRealPayment(amount);
+    makeRealPayment(amount)
   } else {
-    makeMockPayment(amount);
+    makeMockPayment(amount)
   }
-};
+}
 ```
 
 What if you configured your server with `ENVIRONMENT=production` instead of `ENVIRONMENT=prod`?
@@ -31,8 +31,8 @@ If you'd used TypedEnv instead, you'd get this
 
 ```ts
 const env = TypedEnv({
-  ENVIRONMENT: EnumVar({options: ['dev', 'staging', 'production']}),
-});
+  ENVIRONMENT: EnumVar({ options: ['dev', 'staging', 'production'] }),
+})
 
 const makePayment = (amount: bigint) => {
   if (env.ENVIRONMENT === 'prod') {
@@ -40,21 +40,21 @@ const makePayment = (amount: bigint) => {
     // `This condition will always return 'false' since
     // the types '"dev" | "staging" | "production"' and
     // '"prod"' have no overlap.`
-    return makeRealPayment(amount);
+    return makeRealPayment(amount)
   } else {
-    return makeFakePayment(amount);
+    return makeFakePayment(amount)
   }
-};
+}
 ```
 
 ## What types are supported?
 
-Currently, strings, integers, and enums are supported, although you can define your own custom type
+Currently, strings, enums, integers, and dates are supported, although you can define your own custom type
 using the `Declaration<T>` type
 
 ```ts
 export type Declaration<T> = {
-  variable?: string; // The name of the environment variable; defaults to match the key if not specified
-  parser: Parser<T>; // A function (value: string) => T
-};
+  variable?: string // The name of the environment variable; defaults to match the key if not specified
+  parser: Parser<T> // A function (value: string) => T
+}
 ```
