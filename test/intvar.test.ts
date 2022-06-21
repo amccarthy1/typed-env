@@ -20,3 +20,13 @@ test('Test random garbage', async () => {
   expect(() => intvar.parser(' ')).toThrow('not an integer')
   expect(() => intvar.parser('false')).toThrow('not an integer')
 })
+
+test('Supports validators', async () => {
+  const intvar = IntVar({
+    validator: (v) => {
+      if (v < 0) throw new Error('No negativity allowed')
+    },
+  })
+  expect(() => intvar.parser('0')).not.toThrow('negativity')
+  expect(() => intvar.parser('-1')).toThrow('negativity')
+})

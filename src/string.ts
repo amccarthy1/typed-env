@@ -7,8 +7,8 @@ type Params = {
 }
 
 export function StringVar({
-  variable,
   pattern,
+  variable,
   validator,
 }: Params = {}): Declaration<string> {
   const parser = (value: string) => {

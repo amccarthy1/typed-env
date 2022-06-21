@@ -18,7 +18,7 @@ export function IntVar({
     }
     const numberValue = Number(value)
     if (!Number.isInteger(numberValue)) throw new Error(invalidIntMessage)
-    if (typeof validator === 'function') validator(numberValue)
+    if (validator) validator(numberValue)
     return numberValue
   }
   return {
