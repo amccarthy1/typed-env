@@ -1,6 +1,6 @@
 {
   "name": "@amccarthy1/typed-env",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Typed environment variables",
   "main": "dist/cjs/src/index.js",
   "module": "dist/esm/src/index.js",
