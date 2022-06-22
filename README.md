@@ -1,6 +1,7 @@
 # Typed Env
 
 [![codecov](https://codecov.io/gh/amccarthy1/typed-env/branch/main/graph/badge.svg?token=MA2UGQG274)](https://codecov.io/gh/amccarthy1/typed-env)
+
 A strongly-typed, 0-dependency environment variable parser for Typescript!
 
 ## Why is this useful
