@@ -1,5 +1,7 @@
-export { IntVar } from './integer'
+export { BoolVar } from './boolean'
+export { DateVar } from './date'
 export { EnumVar } from './enum'
+export { IntVar } from './integer'
 export { StringVar } from './string'
 export { optional, TypedEnv } from './env'
 export type { Declaration, Parser } from './types'

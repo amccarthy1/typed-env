@@ -1,9 +1,9 @@
-import { BoolVar } from '../src/boolean'
-import { DateVar } from '../src/date'
-import { EnumVar } from '../src/enum'
-import { optional, TypedEnv } from '../src/env'
-import { IntVar } from '../src/integer'
-import { StringVar } from '../src/string'
+import { BoolVar } from '../src'
+import { DateVar } from '../src'
+import { EnumVar } from '../src'
+import { optional, TypedEnv } from '../src'
+import { IntVar } from '../src'
+import { StringVar } from '../src'
 
 describe('TypedEnv', () => {
   test('basic parsing works', async () => {
@@ -122,10 +122,5 @@ describe('TypedEnv', () => {
     process.env.SOME_RANDOM_VAR_NAME = 'SOME_VALUE'
     expect(TypedEnv(schema).SOME_RANDOM_VAR_NAME).toEqual('SOME_VALUE')
     delete process.env.SOME_RANDOM_VAR_NAME
-  })
-
-  const env = TypedEnv({
-    required: BoolVar({ defaultValue: false }),
-    optional: optional(BoolVar()),
   })
 })
