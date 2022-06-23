@@ -51,7 +51,7 @@ const makePayment = (amount: bigint) => {
 
 ## What types are supported?
 
-Currently, strings, enums, integers, and dates are supported, although you can define your own custom type
+Currently, strings, enums, integers, booleans, and dates are supported, although you can define your own custom type
 using the `Declaration<T>` type
 
 ```ts
@@ -60,3 +60,24 @@ export type Declaration<T> = {
   parser: Parser<T> // A function (value: string) => T
 }
 ```
+
+## What about optional variables?
+
+TypedEnv is primarily built for required variables, but does support optionals using a `defaultValue` property.
+If you do not want to use an explicit default, you can use the `optional()` wrapper provided, which will automatically
+inject a default value of `null` and convert a `Declaration<T>` to a `Declaration<T|null>`
+
+```ts
+const env = TypedEnv({
+  required: BoolVar({ defaultValue: false }),
+  optional: optional(BoolVar()),
+})
+// This schema yields the following type object
+const env: {
+  required: boolean
+  optional: boolean | null
+}
+```
+
+It is generally preferred to use `defaultValue` over the `optional` wrapper, but `optional` may be useful in migrating
+existing codebases which already treat env vars as optional.

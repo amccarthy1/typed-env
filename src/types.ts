@@ -1,6 +1,10 @@
 export type Parser<T> = (value: string) => T
 
-export type Declaration<T> = {
+export type OptionalProps<T> = {
   variable?: string
-  parser: Parser<T>
+  defaultValue?: T
 }
+
+export type Declaration<T> = {
+  parser: Parser<T>
+} & OptionalProps<T>

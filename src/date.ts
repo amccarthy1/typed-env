@@ -1,12 +1,11 @@
-import type { Declaration } from './types'
+import type { Declaration, OptionalProps } from './types'
 
 type Params = {
-  variable?: string
   validator?: (value: Date) => void
-}
+} & OptionalProps<Date>
 export function DateVar({
-  variable,
   validator,
+  ...props
 }: Params = {}): Declaration<Date> {
   const parser = (value: string) => {
     const dateValue = new Date(value)
@@ -17,7 +16,7 @@ export function DateVar({
     return dateValue
   }
   return {
-    variable,
     parser,
+    ...props,
   }
 }

@@ -7,12 +7,27 @@ const parseValue = <T>(
   const envVarName = declaration.variable ?? key
   const envValue = env[envVarName]
   if (typeof envValue === 'undefined') {
-    throw new Error(`No value specified for ${envVarName}`)
+    if (typeof declaration.defaultValue === 'undefined') {
+      throw new Error(`No value specified for ${envVarName}`)
+    }
+    return [key, declaration.defaultValue]
   }
   try {
-    return [key, declaration.parser(envValue)] as [string, T]
+    return [key, declaration.parser(envValue)]
   } catch (error) {
     throw new Error(`Error while parsing env var ${envVarName}: ${error}`)
+  }
+}
+
+export function optional<T>({
+  parser,
+  defaultValue,
+  ...others
+}: Declaration<T>): Declaration<T | null> {
+  return {
+    parser,
+    defaultValue: defaultValue || null,
+    ...others,
   }
 }
 

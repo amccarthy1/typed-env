@@ -1,15 +1,14 @@
-import type { Declaration } from './types'
+import type { Declaration, OptionalProps } from './types'
 
 type Params = {
   pattern?: RegExp
-  variable?: string
   validator?: (value: string) => void
-}
+} & OptionalProps<string>
 
 export function StringVar({
   pattern,
-  variable,
   validator,
+  ...props
 }: Params = {}): Declaration<string> {
   const parser = (value: string) => {
     if (pattern) {
@@ -20,7 +19,7 @@ export function StringVar({
     return value
   }
   return {
-    variable,
     parser,
+    ...props,
   }
 }

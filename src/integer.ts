@@ -1,15 +1,14 @@
-import type { Declaration } from './types'
+import type { Declaration, OptionalProps } from './types'
 
 type Params = {
-  variable?: string
   validator?: (intValue: number) => void
-}
+} & OptionalProps<number>
 
 const invalidIntMessage = 'Value is not an integer!'
 
 export function IntVar({
-  variable,
   validator,
+  ...props
 }: Params = {}): Declaration<number> {
   const parser = (value: string) => {
     if (value.trim() === '') {
@@ -22,7 +21,7 @@ export function IntVar({
     return numberValue
   }
   return {
-    variable,
     parser,
+    ...props,
   }
 }
