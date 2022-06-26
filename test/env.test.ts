@@ -97,6 +97,19 @@ describe('TypedEnv', () => {
     expect(TypedEnv(schema, envWithB).A).toEqual('Real Value')
   })
 
+  test('runs validation on default values', async () => {
+    expect(() =>
+      TypedEnv({
+        A: IntVar({
+          defaultValue: 1,
+          validator(v) {
+            if (v < 2) throw new Error('too small')
+          },
+        }),
+      })
+    ).toThrow('too small')
+  })
+
   test('handles optional variables', async () => {
     const rawEnv = {
       A: 'A',
@@ -122,5 +135,21 @@ describe('TypedEnv', () => {
     process.env.SOME_RANDOM_VAR_NAME = 'SOME_VALUE'
     expect(TypedEnv(schema).SOME_RANDOM_VAR_NAME).toEqual('SOME_VALUE')
     delete process.env.SOME_RANDOM_VAR_NAME
+  })
+
+  test("Validators don't fire for nulls on optionals", async () => {
+    const schema = {
+      A: optional(
+        IntVar({
+          validator() {
+            throw new Error('nope')
+          },
+        })
+      ),
+    }
+    const rawEnv = { A: '1' }
+    const emptyEnv = {}
+    expect(() => TypedEnv(schema, rawEnv)).toThrow('nope')
+    expect(TypedEnv(schema, emptyEnv).A).toBeNull()
   })
 })

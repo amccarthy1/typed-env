@@ -10,10 +10,13 @@ const parseValue = <T>(
     if (typeof declaration.defaultValue === 'undefined') {
       throw new Error(`No value specified for ${envVarName}`)
     }
+    if (declaration.validator) declaration.validator(declaration.defaultValue)
     return [key, declaration.defaultValue]
   }
   try {
-    return [key, declaration.parser(envValue)]
+    const value: T = declaration.parser(envValue)
+    if (declaration.validator) declaration.validator(value)
+    return [key, value]
   } catch (error) {
     throw new Error(`Error while parsing env var ${envVarName}: ${error}`)
   }
@@ -22,11 +25,19 @@ const parseValue = <T>(
 export function optional<T>({
   parser,
   defaultValue,
+  validator,
   ...others
 }: Declaration<T>): Declaration<T | null> {
   return {
     parser,
     defaultValue: defaultValue || null,
+    validator:
+      validator &&
+      ((value: T | null) => {
+        if (value !== null) {
+          validator(value)
+        }
+      }),
     ...others,
   }
 }

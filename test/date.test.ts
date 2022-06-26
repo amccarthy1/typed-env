@@ -19,17 +19,3 @@ test('Throws for invalid date formats', async () => {
     'Value did not match a valid date format!'
   )
 })
-
-test('Supports custom validators', async () => {
-  const datevar = DateVar({
-    validator: (v) => {
-      if (v < new Date('2011-11-11')) {
-        throw new Error(
-          'This date precedes the release of The Elder Scrolls V: Skyrim!'
-        )
-      }
-    },
-  })
-  expect(() => datevar.parser('11/10/11')).toThrow('Skyrim')
-  expect(() => datevar.parser('11/11/11')).not.toThrow('Skyrim')
-})
