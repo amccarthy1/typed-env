@@ -4,6 +4,26 @@
 
 A strongly-typed, 0-dependency environment variable parser for Typescript!
 
+## Get started
+
+```bash
+npm install --save @amccarthy1/typed-env  # npm
+```
+
+```bash
+yarn add @amccarthy1/typed-env  # yarn
+```
+
+```ts
+import { TypedEnv, EnumVar } from '@amccarthy1/typed-env'
+
+const env = TypedEnv({
+  ENVIRONMENT: EnumVar({ options: ['dev', 'staging', 'prod'] }),
+})
+
+doWhateverToRunApp(env.ENVIRONMENT) // env.ENVIRONMENT is of type 'dev' | 'staging' | 'prod'
+```
+
 ## Why is this useful
 
 Many services use environment variables for runtime configuration, anything from the current
