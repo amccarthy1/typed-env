@@ -7,10 +7,11 @@ const parseValue = <T>(
   const envVarName = declaration.variable ?? key
   const envValue = env[envVarName]
   if (typeof envValue === 'undefined') {
-    if (typeof declaration.defaultValue === 'undefined') {
+    if (!Object.prototype.hasOwnProperty.apply(declaration, ['defaultValue'])) {
       throw new Error(`No value specified for ${envVarName}`)
     }
-    if (declaration.validator) declaration.validator(declaration.defaultValue)
+    if (declaration.validator)
+      declaration.validator(declaration.defaultValue as T)
     return [key, declaration.defaultValue]
   }
   try {
@@ -23,6 +24,26 @@ const parseValue = <T>(
 }
 
 export function optional<T>({
+  parser,
+  defaultValue,
+  validator,
+  ...others
+}: Declaration<T>): Declaration<T | undefined> {
+  return {
+    parser,
+    defaultValue: defaultValue || undefined,
+    validator:
+      validator &&
+      ((value: T | undefined) => {
+        if (typeof value !== 'undefined') {
+          validator(value)
+        }
+      }),
+    ...others,
+  }
+}
+
+export function nullable<T>({
   parser,
   defaultValue,
   validator,

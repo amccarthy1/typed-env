@@ -4,6 +4,7 @@ import { EnumVar } from '../src'
 import { optional, TypedEnv } from '../src'
 import { IntVar } from '../src'
 import { StringVar } from '../src'
+import { nullable } from '../src/env'
 
 describe('TypedEnv', () => {
   test('basic parsing works', async () => {
@@ -110,15 +111,15 @@ describe('TypedEnv', () => {
     ).toThrow('too small')
   })
 
-  test('handles optional variables', async () => {
+  test('handles nullable variables', async () => {
     const rawEnv = {
       A: 'A',
     }
     expect(
       TypedEnv(
         {
-          A: optional(StringVar()),
-          B: optional(StringVar()),
+          A: nullable(StringVar()),
+          B: nullable(StringVar()),
         },
         rawEnv
       )
@@ -137,9 +138,9 @@ describe('TypedEnv', () => {
     delete process.env.SOME_RANDOM_VAR_NAME
   })
 
-  test("Validators don't fire for nulls on optionals", async () => {
+  test("Validators don't fire for nulls on nullables", async () => {
     const schema = {
-      A: optional(
+      A: nullable(
         IntVar({
           validator() {
             throw new Error('nope')
@@ -151,5 +152,27 @@ describe('TypedEnv', () => {
     const emptyEnv = {}
     expect(() => TypedEnv(schema, rawEnv)).toThrow('nope')
     expect(TypedEnv(schema, emptyEnv).A).toBeNull()
+  })
+
+  test('Optionals return undefined instead of null', async () => {
+    const schema = {
+      A: optional(StringVar()),
+      B: optional(
+        StringVar({
+          validator() {
+            throw new Error('nope')
+          },
+        })
+      ),
+      C: optional(
+        StringVar({
+          validator() {
+            return true
+          },
+        })
+      ),
+    }
+    const emptyEnv = { C: 'foo' }
+    expect(TypedEnv(schema, emptyEnv).A).toBeUndefined()
   })
 })
